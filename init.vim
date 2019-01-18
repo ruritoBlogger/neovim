@@ -151,6 +151,7 @@ let mapleader = "\<Space>"
 nnoremap <Leader>t :terminal<CR>
 "スペース + v でターミナル起動"
 nnoremap <Leader>v :vsplit<CR>
+nnoremap <Leader>n :split<CR>
 "ウインドウ移動ショートカットをswに当てる"
 nnoremap fd <C-w>w
 "カーソルショートカットを割当"
