@@ -69,6 +69,8 @@ call dein#add('Shougo/deoplete.nvim')
 call dein#add('zchee/deoplete-jedi')
 call dein#add('zchee/deoplete-clang')
 call dein#add('godlygeek/tabular')
+call dein#add('plasticboy/vim-markdown')
+call dein#add('lervag/vimtex')
 "markdown用のプラグイン"
 "Ctr-pでプレビューできる"
 call dein#add('tpope/vim-markdown')
@@ -83,7 +85,11 @@ call dein#add('tpope/vim-fugitive')
 call dein#add('posva/vim-vue')
 "カラースキーム"
 call dein#add('jdkanani/vim-material-theme')
-
+"テンプレート用"
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
+"kotlin用"
+call dein#add('udalov/kotlin-vim')
 if !has('nvim')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-nvim-rpc')
@@ -111,9 +117,9 @@ colorscheme material-theme
 
 "NERDTree用の設定
 " Neovim起動時にNERDTreeも起動する"
-autocmd VimEnter * execute 'NERDTree'
-let g:nerdtree_tabs_open_on_console_startup=1
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
+"autocmd VimEnter * execute 'NERDTree'
+"let g:nerdtree_tabs_open_on_console_startup=1
+"map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
 "clang補完機能の追加"
 let g:deoplete#sources#clang#clang_header = '/usr/include/clang'
@@ -152,8 +158,12 @@ nnoremap <Leader>t :terminal<CR>
 "スペース + v でターミナル起動"
 nnoremap <Leader>v :vsplit<CR>
 nnoremap <Leader>n :split<CR>
-"ウインドウ移動ショートカットをswに当てる"
+"ウインドウ移動ショートカットをfdに当てる"
 nnoremap fd <C-w>w
+"タブ移動ショートカットをswに当てる"
+nnoremap sw gt
+"タブ生成ショートカットをnewに当てる"
+nnoremap :new :tabnew
 "カーソルショートカットを割当"
 noremap <S-h>   ^
 noremap <S-l>   $
@@ -168,7 +178,39 @@ set wildmode=longest:full,full
 inoremap <silent> jj <C-n>
 inoremap <silent> kk <C-p>
 "ハイライト削除"
-nnoremap <silent> nn :noh<CR>
+nnoremap <silent> mm :noh<CR>
 
 ".Vueファイルのカラースキームのための設定"
 autocmd FileType vue syntax sync fromstart
+"latexの環境"
+let g:latex_latexmk_options = '-pdfdvi'
+
+"テンプレート用"
+
+"Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.config/nvim/template/'
+
+
