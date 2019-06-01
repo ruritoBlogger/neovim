@@ -90,6 +90,8 @@ call dein#add('Shougo/neosnippet.vim')
 call dein#add('Shougo/neosnippet-snippets')
 "kotlin用"
 call dein#add('udalov/kotlin-vim')
+"コメントアウト用"
+call dein#add('kazukazuinaina/commentout.vim')
 if !has('nvim')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-nvim-rpc')
