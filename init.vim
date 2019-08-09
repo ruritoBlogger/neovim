@@ -109,8 +109,6 @@ endif
 filetype plugin indent on
 
 "カラースキーム設定"
-syntax on
-set t_Co=256
 syntax enable
 set background=dark
 set termguicolors
@@ -128,18 +126,14 @@ let g:deoplete#sources#clang#clang_header = '/usr/include/clang'
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang-3.8.so.1'
 let g:deoplete#sources#clang#std = {'c':'c11', 'cpp':'c++1z'}
 
-
-"shellの設定"
-set sh=bash
-
 "shellのキーバインド設定"
 tnoremap <silent> <ESC> <C-\><C-n>
 
 "RubyとPythonでインデントを分ける"
 augroup fileTypeIndent
     autocmd!
-    autocmd BufNewFile,BufRead *.py setlocal tabstop=4 softtabstop=4 shiftwidth=4
-    autocmd BufNewFile,BufRead *.rb setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd Filetype *.py setlocal tabstop=4 softtabstop=4 shiftwidth=4
+    autocmd FileType *.rb setlocal tabstop=2 softtabstop=2 shiftwidth=2
   augroup END
 
 "" markdown用の詳細設定 {{{
@@ -215,4 +209,10 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 " Tell Neosnippet about the other snippets
 let g:neosnippet#snippets_directory='~/.config/nvim/template/'
 
-
+"setting update command"
+function PluginUpdate()
+  if exists('*dein#update()')
+    call dein#update()
+  endif
+endfunction
+command -nargs=0 PluginUpdate call PluginUpdate()
