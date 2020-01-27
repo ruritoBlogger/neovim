@@ -1,5 +1,6 @@
-set completeopt=menuone
-set autoindent
+set encoding=utf-8
+scriptencoding utf-8
+
 set nocompatible
 "tabの代わりにスペース"
 set expandtab
@@ -20,7 +21,7 @@ inoremap <silent> ff <ESC>
 au BufNewFile,BufRead *.pde setf processing
 
 let g:lightline = {
-      \ 'colorscheme': 'powerline',
+      \ 'colorscheme': 'gotham256',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -36,8 +37,7 @@ endif
 
 set laststatus=2
 set showtabline=2
-set t_Co=256
-
+set ttimeoutlen=10
 
 
 if &compatible
@@ -60,7 +60,7 @@ call dein#begin(s:dein_dir)
 "プラグインマネージャー"
 call dein#add('Shougo/dein.vim')
 
-call dein#add('itchyny/lightline.vim')
+call dein#add('vim-airline/vim-airline')
 call dein#add('yuttie/hydrangea-vim')
 call dein#add('scrooloose/nerdtree')
 call dein#add('sophacles/vim-processing')
@@ -71,6 +71,10 @@ call dein#add('zchee/deoplete-clang')
 call dein#add('godlygeek/tabular')
 call dein#add('plasticboy/vim-markdown')
 call dein#add('lervag/vimtex')
+call dein#add('tbodt/deoplete-tabnine', { 'build': './install.sh' })
+call dein#add('sheerun/vim-polyglot')
+call dein#add('dense-analysis/ale')
+call dein#add('vim-jp/vimdoc-ja')
 "markdown用のプラグイン"
 "Ctr-pでプレビューできる"
 call dein#add('tpope/vim-markdown')
@@ -90,6 +94,10 @@ call dein#add('Shougo/neosnippet.vim')
 call dein#add('Shougo/neosnippet-snippets')
 "kotlin用"
 call dein#add('udalov/kotlin-vim')
+"コメントアウト用"
+call dein#add('kazukazuinaina/commentout.vim')
+"git用"
+call dein#add('lambdalisue/gina.vim')
 if !has('nvim')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-nvim-rpc')
@@ -98,6 +106,10 @@ endif
 "deoplete.nvimの設定を記載"
 let g:deoplete#enable_at_startup = 1
 
+"airlineの設定"
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
 call dein#end()
 
 if dein#check_install()
@@ -107,13 +119,16 @@ endif
 filetype plugin indent on
 
 "カラースキーム設定"
-syntax on
-set t_Co=256
 syntax enable
 set background=dark
-set termguicolors
-colorscheme material-theme
+if has('termguicolors')
+    set termguicolors
+endif
+colorscheme gotham256
 
+if executable('ctags')
+    set tags=./tags;
+endif
 
 "NERDTree用の設定
 " Neovim起動時にNERDTreeも起動する"
@@ -161,7 +176,7 @@ nnoremap <Leader>n :split<CR>
 "ウインドウ移動ショートカットをfdに当てる"
 nnoremap fd <C-w>w
 "タブ移動ショートカットをswに当てる"
-nnoremap sw gt
+nnoremap gg gt
 "タブ生成ショートカットをnewに当てる"
 nnoremap :new :tabnew
 "カーソルショートカットを割当"
@@ -213,4 +228,14 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 " Tell Neosnippet about the other snippets
 let g:neosnippet#snippets_directory='~/.config/nvim/template/'
 
+" 関数を定義
+function Indent()
+  let save_cursor = getcurpos()
+  execute "normal " . "gg=G"
+  call setpos('.', save_cursor)
+endfunction
+command -nargs=0 Indent call Indent()
 
+call gina#custom#command#option('status', '--opener', 'vsplit')
+call gina#custom#command#option('diff', '--opener', 'vsplit')
+call gina#custom#command#option('log', '--opener', 'vsplit')
